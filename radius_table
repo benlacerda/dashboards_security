@@ -1,0 +1,272 @@
+<form  name="FormNameAccount" method="post">
+    <div class="ml-3 mr-3 " style="background-color: white; height: 170px; ">
+    <div class="md-form md-outline float-left input-group " style="margin-left: 35%;">
+        <div style="margin-left: 10px;">
+            <p style="border-radius:10px;padding:5px; font-size: 20px; widht: 100% ; color:white; background-color: #38a0a4;">
+            Filtro
+            </p><br />
+        <input type="text" id="inputTasksFormScanAccount" class="form-control bg-white" aria-describedby="inputTasksFormScanInputGroup" placeholder="Conta de usuário" style="border-radius: 10px; border-color: #38a0a4 !important; border-width: medium; height: 34px !important;color:black ;font-size: 1.2em;">
+        <br />
+        <input type="text" id="inputEventID" class="form-control bg-white" aria-describedby="inputTasksFormScanInputGroup" placeholder="Mac adress" style="border-radius: 10px; border-color: #38a0a4 !important; border-width: medium; height: 34px !important;color:black ;font-size: 1.2em;">
+
+</div>
+&nbsp;        
+<div>
+        <p style="border-radius:10px;padding:5px; font-size: 20px; color:white; background-color: #38a0a4">
+            Time Range
+        </p>
+        De:
+        <input type="datetime-local" id="DateIni" class="form-control bg-white" aria-describedby="inputTasksFormScanInputGroup"  style="border-radius: 10px; border-color: #38a0a4 !important; border-width: medium; height: 34px !important;color:black ;font-size: 1.2em;">
+        Até:
+        <input type="datetime-local" id="DateFim" class="form-control bg-white" aria-describedby="inputTasksFormScanInputGroup" placeholder="Origem" style="border-radius: 10px; border-color: #38a0a4 !important; border-width: medium; height: 34px !important;color:black ;font-size: 1.2em;">
+        </div>  
+<div style="margin-top: 60px;margin-left: 10px;">
+       <a onclick="createDataTable()"><span class="input-group-text font-weight-bold text-white  text-center" id="inputTasksFormScanInputGroupAccount"
+            style="border-radius: 10px; height: 34px !important ;font-size: 1.2em; padding-top: -10px; background-color: #e96817;">Filtrar</span></a>
+        
+        </div>
+
+    </div>
+
+</div>
+
+    
+</form>
+
+
+
+<div class="col-12" id="tabela_5136"></div>
+
+
+
+
+
+<script>
+
+
+
+
+    $(document).ready(function(){
+        NewDataTable();
+    });
+
+ 
+
+ function NewDataTable() {
+        let dataSet = [];
+        
+
+     dataSet = JSON.parse(window.localStorage.getItem('newTokenTasks40'));
+
+       $('#tabela_5136').html(
+      `
+       <table class="table table-sm table-striped table-bordered white table-responsive-sm table-hover"
+                cellspacing="0" width="100%" id="table_result" style= "overflow: scroll;">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Fully-Qualifed-User-Name</th>
+                        <th>Client-Friendly-Name</th>
+                        <th>Calling-Station-Id</th>
+                        <th>Packet-Type</th>
+                        <th>Descrição Packet-Type</th>
+                        <th>Reason-Code</th>
+                        <th>Descrição Reason-Code</th>
+                    </tr>
+                </thead>
+            </table>
+      `);
+      
+        
+
+        if ($.fn.DataTable.isDataTable('#table_result')) {
+            $('#table_result').DataTable().destroy();
+        }
+        
+        
+        $('#table_result').DataTable().destroy();
+
+        let table = $('#table_result').DataTable({
+            data: dataSet,
+            columns: [
+                { data: 'timestamp' },
+                { data: 'fully_qualifed_user_name' },
+                { data: 'client_friendly_name' },
+                { data: 'calling_station_id' },
+                { data: 'packet_type' },
+                { data: 'packet_type_description' },
+                { data: 'reason_code' },
+                { data: 'reason_code_description' }
+
+            ],
+            order: [1, 'asc'],
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            language: {
+                sEmptyTable: "Nenhum registro encontrado",
+                sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                sInfoEmpty: "Mostrando 0 até 0 de 0 registros",
+                sInfoFiltered: "(Filtrados de _MAX_ registros)",
+                sInfoPostFix: "",
+                sInfoThousands: ".",
+                sLengthMenu: "Mostrar _MENU_ resultados por página",
+                sLoadingRecords: "Carregando...",
+                sProcessing: "Processando...",
+                sZeroRecords: "Nenhum registro encontrado",
+                sSearch: "Pesquisar:",
+                oPaginate: {
+                    sNext: "Próximo",
+                    sPrevious: "Anterior",
+                    sFirst: "Primeiro",
+                    sLast: "Último"
+                },
+                oAria: {
+                    sSortAscending: ": Ordenar colunas de forma ascendente",
+                    sSortDescending: ": Ordenar colunas de forma descendente"
+                }
+            }
+        });
+    } 
+
+
+
+ 
+       function formatDateTime(dateTime) {
+        let date = dateTime.split("T")[0];
+        let time = dateTime.split("T")[1];
+        date = date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        time = time.split(".")[0];
+        return `${date} ${time}`;
+    }
+    
+    function createDataTable(){
+        getResult3();
+        setLoading("tabela_Radius");
+        setTimeout(() => {  NewDataTable() }, 3000);
+    }
+    
+
+    
+    function setLoading(id) {
+    $(`#${id}`).html(
+        `<div class="text-center p-2" style="height: 100%;padding: 25px !important;">
+            <i class=" fa fa-4x fa-fw fa-pulse fa-spinner"></i>
+            <h5 class="py-2 animated fadeInDown">Buscando dados...</h5>
+        </div>`
+    );
+}
+
+
+
+
+    function getResult3() {
+      
+       
+        
+        let newTokenTasks40 = [];
+
+        var Account_name = document.forms["FormNameAccount"]["inputTasksFormScanAccount"].value;
+        var ap_adress = document.forms["FormNameAccount"]["inputEventID"].value;
+        var data_ini = document.forms["FormNameAccount"]["DateIni"].value;
+        var data_fim = document.forms["FormNameAccount"]["DateFim"].value;
+        const RangeIni = new Date(data_ini).getTime();
+        const RangeEnd = new Date(data_fim).getTime();
+        var searchAccount = "";
+        var searchEvent = "";
+
+        searchAccount = "(fully_qualifed_user_name: " + Account_name + ")"
+        searchEvent = "(client_friendly_name: " + ap_adress + ")";
+
+        
+
+  
+        var query_string = searchEvent + " AND " + searchAccount;       
+
+          const query = {
+        index: "Radius_Novo",
+        size: "10000",
+        body: {
+            "query" : {
+            "bool" : {
+               "filter" : [
+                   {
+                        "range": {
+                     
+                          
+                                "GenerateTime": {
+                                "gte": RangeIni,
+                                "lte": RangeEnd
+                            
+                            }
+                        }
+                   }
+               ],
+               "must": [
+                   
+                        {
+                                    "query_string": {
+                                        "query": query_string
+                                    }
+                        }
+                   
+               ]
+           }
+        }
+        }
+    };
+   
+
+    
+	
+
+	  $.ajax({
+                url: `/avantapi/avantData/search/customSearch`,
+                method: 'POST',
+                headers: {
+                    cluster: 'AvantData'
+                },
+                data: JSON.stringify(query),
+                success: (response) => {
+                    const result = response.hits.hits;
+                    result.forEach((item) => {
+                        
+                        const timestamp = item._source.timestamp;
+                        const fully_qualifed_user_name = item._source.fully_qualifed_user_name !== undefined ? item._source.fully_qualifed_user_name: '-';;
+                        const client_friendly_name =  item._source.client_friendly_name !== undefined ? item._source.client_friendly_name: '-';;
+                        const calling_station_id = item._source.calling_station_id !== undefined ? item._source.calling_station_id: '-';;
+                        const packet_type = item._source.packet_type !== undefined ? item._source.packet_type: '-';;
+                        const packet_type_description = item._source.packet_type_description !== undefined ? item._source.packet_type_description: '-';;
+                        const reason_code = item._source.reason_code !== undefined ? item._source.reason_code: '-';;
+                        const reason_code_description = item._source.reason_code_description !== undefined ? item._source.reason_code_description: '-';;
+
+
+                        let user = {
+                            "timestamp": timestamp,
+                            "fully_qualifed_user_name": fully_qualifed_user_name,
+                            "client_friendly_name": client_friendly_name,
+                            "calling_station_id" : calling_station_id,
+                            "packet_type": packet_type,
+                            "packet_type_description": packet_type_description,
+                            "reason_code": reason_code,
+                            "reason_code_description": reason_code_description
+
+                            
+
+
+                        };
+                        newTokenTasks40.push(user);
+                    });
+                    window.localStorage.clear();
+                    window.localStorage.setItem('newTokenTasks40', JSON.stringify(newTokenTasks40));
+
+                }
+            });
+        
+
+}
+
+
+</script>
